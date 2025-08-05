@@ -6,13 +6,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-// Import your route files
 const authRoutes = require('./routes/auth.js');
 const postRoutes = require('./routes/posts.js');
 const commentRoutes = require('./routes/comments.js');  // Optional, if you want
 const userRoutes = require('./routes/users'); // or auth.js if you added it there
 
-// Initialize express app
+
 const app = express();
 
 // CORS configuration to allow frontend to make requests
@@ -22,10 +21,8 @@ const corsOptions = {
     allowedHeaders: 'Content-Type, Authorization'
 };
 
-// Apply CORS settings
 app.use(cors(corsOptions));
 
-// Parse JSON bodies for incoming requests
 app.use(express.json());
 
 // Log the Mongo URI (to make sure it's being loaded correctly)
