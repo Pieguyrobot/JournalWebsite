@@ -17,7 +17,7 @@ function App() {
 
     if (token && storedUser) {
       // Attempt to validate token if present and user exists
-      fetch('http://localhost:5000/api/auth/verify', {
+      fetch('http://10.0.0.55:5000/api/auth/verify', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
