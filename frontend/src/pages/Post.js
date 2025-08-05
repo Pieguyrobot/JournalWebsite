@@ -14,7 +14,7 @@ export default function Post() {
   useEffect(() => {
     async function fetchPost() {
       try {
-        const res = await fetch(`http://10.0.0.55:5000/api/posts/${id}`);
+        const res = await fetch(`http://pieguyrobot.com:5000/api/posts/${id}`);
         const data = await res.json();
         setPost(data);
         setLoading(false);
@@ -26,7 +26,7 @@ export default function Post() {
 
     async function fetchComments() {
       try {
-        const res = await fetch(`http://10.0.0.55:5000/api/comments/${id}`);
+        const res = await fetch(`http://pieguyrobot.com:5000/api/comments/${id}`);
         const data = await res.json();
         setComments(data);
       } catch (err) {
@@ -47,7 +47,7 @@ export default function Post() {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/comments', {
+      const res = await fetch('http://pieguyrobot.com:5000/api/comments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
