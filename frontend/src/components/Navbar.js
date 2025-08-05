@@ -13,7 +13,7 @@ export default function Navbar() {
             if (!token) return;
 
             try {
-                const res = await fetch('http://localhost:5000/api/auth/me', {
+                const res = await fetch('http://10.0.0.55:5000/api/auth/me', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -46,7 +46,7 @@ export default function Navbar() {
         const newDisplayName = prompt('Enter your new display name:');
         if (!newDisplayName) return;
 
-        fetch('http://localhost:5000/api/users/display-name', {
+        fetch('http://10.0.0.55:5000/api/users/display-name', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
