@@ -23,8 +23,8 @@ export default function Login() {
 
         try {
             const endpoint = isRegister
-                ? 'http://localhost:5000/api/auth/register'
-                : 'http://localhost:5000/api/auth/login';
+                ? 'http://10.0.0.55:5000/api/auth/register'
+                : 'http://10.0.0.55:5000/api/auth/login';
 
             const res = await fetch(endpoint, {
                 method: 'POST',

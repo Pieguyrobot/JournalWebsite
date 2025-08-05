@@ -31,7 +31,7 @@ export default function NewPost() {
         }
 
         try {
-            const res = await fetch('http://localhost:5000/api/posts', {
+            const res = await fetch('http://10.0.0.55:5000/api/posts', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
