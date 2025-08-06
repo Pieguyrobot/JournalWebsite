@@ -23,8 +23,8 @@ export default function Login() {
 
         try {
             const endpoint = isRegister
-                ? 'http://pieguyrobot.com:5000/api/auth/register'
-                : 'http://pieguyrobot.com:5000/api/auth/login';
+                ? 'http://pieguyrobot.com/api/auth/register'
+                : 'http://pieguyrobot.com/api/auth/login';
 
             const res = await fetch(endpoint, {
                 method: 'POST',

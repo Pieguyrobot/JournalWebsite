@@ -16,7 +16,7 @@ const app = express();
 
 // CORS configuration to allow frontend to make requests
 const corsOptions = {
-    origin: 'http://pieguyrobot.com:3000', // Allow requests from your frontend domain
+    origin: ['http://pieguyrobot.com', 'http://pieguyrobot.com:3000', 'https://pieguyrobot.com'], // Allow requests from multiple origins
     methods: 'GET, POST, PUT, DELETE',
     allowedHeaders: 'Content-Type, Authorization'
 };

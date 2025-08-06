@@ -17,7 +17,7 @@ function App() {
 
     if (token && storedUser) {
       // Attempt to validate token if present and user exists
-      fetch('http://pieguyrobot.com:5000/api/auth/verify', {
+      fetch('http://pieguyrobot.com/api/auth/verify', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
