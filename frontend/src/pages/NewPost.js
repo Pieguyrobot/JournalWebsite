@@ -11,8 +11,11 @@ export default function NewPost() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (!token) {
-            navigate('/login');
+        const role = localStorage.getItem('role');
+
+        if (!token || role !== 'admin') {
+            toast.error('Access denied');
+            navigate('/');
         }
     }, [navigate]);
 
