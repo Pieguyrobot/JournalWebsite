@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import OwnerBadge from '../components/OwnerBadge';
+
 
 export default function Navbar() {
     const navigate = useNavigate();
@@ -7,7 +9,11 @@ export default function Navbar() {
     const [role, setRole] = useState('');
     const token = localStorage.getItem('token');
 
+
     useEffect(() => {
+        { post.author?.username === 'TimothyChapell' && <OwnerBadge /> }
+        { post.author?.displayName || post.author?.username }
+        
         async function fetchUser() {
             const token = localStorage.getItem('token');
             if (!token) return;

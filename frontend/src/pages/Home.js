@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import OwnerBadge from '../components/OwnerBadge';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  { post.author?.username === 'TimothyChapell' && <OwnerBadge /> }
+  { post.author?.displayName || post.author?.username }
 
   useEffect(() => {
     fetch('/api/posts') // backend endpoint, adjust if needed
@@ -21,17 +25,17 @@ export default function Home() {
       ) : posts.length === 0 ? (
         <p>No posts yet.</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-6">
             {posts.map(post => (
-                <li key={post._id} className="mb-4 border-b border-red-700 pb-2">
-                    <Link to={`/post/${post._id}`} className="text-red-400 hover:text-red-600 text-xl font-semibold">
-                        {post.title || 'Untitled Post'}
-                    </Link>
-                    <div className="flex justify-between text-sm text-gray-500 mt-2">
-                      <span>{new Date(post.createdAt).toLocaleString()}</span>
-                      <span>{post.author?.displayName || post.author?.username}</span>
-                    </div>
-                </li>
+              <li key={post._id} className="border border-white rounded-lg p-4 bg-black text-red shadow-sm">
+                <Link to={`/post/${post._id}`} className="text-red-400 hover:text-red-600 text-2xl font-bold block mb-2">
+                  {post.title || 'Untitled Post'}
+                </Link>
+                <div className="flex justify-between text-sm text-gray-400 mb-2">
+                  <span>{new Date(post.createdAt).toLocaleString()}</span>
+                  <span>{post.author?.displayName || post.author?.username}</span>
+                </div>
+              </li>
             ))}
         </ul>
       )}

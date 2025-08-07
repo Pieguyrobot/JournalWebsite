@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import OwnerBadge from '../components/OwnerBadge';
 
 
 export default function Login() {
@@ -11,6 +12,9 @@ export default function Login() {
     const [isRegister, setIsRegister] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    { post.author?.username === 'TimothyChapell' && <OwnerBadge /> }
+    { post.author?.displayName || post.author?.username }
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -68,7 +72,7 @@ export default function Login() {
                         placeholder="Username"
                         value={username}
                         onChange={e => setUsername(e.target.value)}
-                        className="w-full p-2 bg-black text-white border border-gray-600 rounded"
+                        className="w-full p-2 bg-black text-white rounded border border-white-600"
                         required
                         disabled={loading}
                     />
@@ -101,24 +105,26 @@ export default function Login() {
                         />
                         <label>Show Password</label>
                     </div>
-                    <button
-                        type="submit"
-                        disabled={
-                            loading ||
-                            !username ||
-                            !password ||
-                            (isRegister && !confirmPassword)
-                        }
-                        className="w-full bg-red-700 hover:bg-red-800 text-white p-2 rounded"
-                    >
-                        {loading
-                            ? isRegister
-                                ? 'Registering...'
-                                : 'Logging in...'
-                            : isRegister
-                                ? 'Register'
-                                : 'Login'}
-                    </button>
+                    <div className="flex justify-center">
+                        <button
+                            type="submit"
+                            disabled={
+                                loading ||
+                                !username ||
+                                !password ||
+                                (isRegister && !confirmPassword)
+                            }
+                            className="bg-black text-white border border-white px-6 py-2 rounded hover:bg-white hover:text-black transition"
+                        >
+                            {loading
+                                ? isRegister
+                                    ? 'Registering...'
+                                    : 'Logging in...'
+                                : isRegister
+                                    ? 'Register'
+                                    : 'Login'}
+                        </button>
+                    </div>
                 </form>
 
                 <div className="mt-4 text-center text-white">

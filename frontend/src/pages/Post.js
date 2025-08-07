@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import OwnerBadge from '../components/OwnerBadge';
 
 export default function Post() {
   const { id } = useParams();
@@ -39,6 +40,10 @@ export default function Post() {
   }, [id]);
 
   async function handleCommentSubmit(e) {
+
+    { post.author?.username === 'TimothyChapell' && <OwnerBadge /> }
+    { post.author?.displayName || post.author?.username }
+
     e.preventDefault();
     const token = localStorage.getItem('token');
     if (!token) {
@@ -99,7 +104,7 @@ export default function Post() {
       <Toaster />
       <button
         onClick={() => navigate('/')}
-        className="mb-4 bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded"
+        className="mb-4 g-black text-white border border-white px-6 py-2 rounded hover:bg-white hover:text-black transition"
       >
         ← Back
       </button>
@@ -132,12 +137,14 @@ export default function Post() {
             placeholder="Write a comment..."
             required
           ></textarea>
-          <button
-            type="submit"
-            className="mt-2 bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded"
-          >
-            Post Comment
-          </button>
+          <div className="mt-3">
+            <button
+              type="submit"
+              className="bg-black text-white border border-white px-6 py-2 rounded hover:bg-white hover:text-black transition"
+              >
+              Post Comment
+            </button>
+          </div>
         </form>
         <div>{renderComments(comments)}</div>
       </div>

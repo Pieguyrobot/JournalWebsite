@@ -11,8 +11,11 @@ export default function NewPost() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (!token) {
-            navigate('/login');
+        const role = localStorage.getItem('role');
+
+        if (!token || role !== 'admin') {
+            toast.error('Access denied');
+            navigate('/');
         }
     }, [navigate]);
 
@@ -60,6 +63,10 @@ export default function NewPost() {
         setLoading(false);
     }
 
+    if (localStorage.getItem('role') !== 'admin') {
+        return null; // or a loading spinner / redirect fallback
+    }
+
     return (
         <div className="p-6 max-w-2xl mx-auto">
             <Toaster />
@@ -77,7 +84,7 @@ export default function NewPost() {
                     placeholder="What's on your mind?"
                     value={content}
                     onChange={e => setContent(e.target.value)}
-                    className="w-full p-2 mb-4 text-black rounded"
+                    className="w-full p-2 mb-4 bg-black text-white rounded border border-white-600"
                     rows="6"
                     required
                 />
@@ -86,15 +93,17 @@ export default function NewPost() {
                     placeholder="Image URL (optional)"
                     value={image}
                     onChange={e => setImage(e.target.value)}
-                    className="w-full p-2 mb-4 text-black rounded"
+                    className="w-full p-2 mb-4 bg-black text-white rounded border border-white-600"
                 />
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-red-700 hover:bg-red-800 text-white p-2 rounded"
-                >
-                    {loading ? 'Posting...' : 'Post'}
-                </button>
+                <div className="flex justify-center">
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="bg-black text-white border border-white px-6 py-2 rounded hover:bg-white hover:text-black transition"
+                    >
+                        {loading ? 'Posting...' : 'Post'}
+                    </button>
+                </div>
             </form>
         </div>
     );

@@ -54,7 +54,7 @@ function App() {
           <div className="flex justify-between items-center">
             <span>You've been logged out. Log back in? </span>
             <button
-              className="ml-2 bg-transparent border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-black"
+              className="ml-2 bg-black border border-white text-white px-4 py-2 rounded hover:bg-white hover:text-black"
               onClick={() => window.location.href = '/login'}
             >
               Log In
