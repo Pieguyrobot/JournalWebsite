@@ -13,8 +13,6 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    { post.author?.username === 'TimothyChapell' && <OwnerBadge /> }
-    { post.author?.displayName || post.author?.username }
 
     async function handleSubmit(e) {
         e.preventDefault();

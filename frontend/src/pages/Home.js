@@ -6,9 +6,6 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  { post.author?.username === 'TimothyChapell' && <OwnerBadge /> }
-  { post.author?.displayName || post.author?.username }
-
   useEffect(() => {
     fetch('/api/posts') // backend endpoint, adjust if needed
       .then(res => res.json())

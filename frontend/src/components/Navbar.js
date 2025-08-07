@@ -11,8 +11,6 @@ export default function Navbar() {
 
 
     useEffect(() => {
-        { post.author?.username === 'TimothyChapell' && <OwnerBadge /> }
-        { post.author?.displayName || post.author?.username }
         
         async function fetchUser() {
             const token = localStorage.getItem('token');

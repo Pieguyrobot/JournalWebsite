@@ -41,8 +41,6 @@ export default function Post() {
 
   async function handleCommentSubmit(e) {
 
-    { post.author?.username === 'TimothyChapell' && <OwnerBadge /> }
-    { post.author?.displayName || post.author?.username }
 
     e.preventDefault();
     const token = localStorage.getItem('token');
