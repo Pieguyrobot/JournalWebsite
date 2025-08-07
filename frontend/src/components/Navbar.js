@@ -13,7 +13,7 @@ export default function Navbar() {
             if (!token) return;
 
             try {
-                const res = await fetch('http://pieguyrobot.com/api/auth/me', {
+                const res = await fetch('/api/auth/me', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -46,7 +46,7 @@ export default function Navbar() {
         const newDisplayName = prompt('Enter your new display name:');
         if (!newDisplayName) return;
 
-        fetch('http://pieguyrobot.com/api/users/display-name', {
+        fetch('/api/users/display-name', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

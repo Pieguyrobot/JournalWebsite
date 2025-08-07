@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
+
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -15,7 +16,7 @@ export default function Login() {
         e.preventDefault();
         setLoading(true);
 
-        if (isRegister && password !== confirmPassword) {
+        if (isRegister && password !== confirmPassword) { 
             toast.error('Passwords do not match!');
             setLoading(false);
             return;
@@ -23,8 +24,8 @@ export default function Login() {
 
         try {
             const endpoint = isRegister
-                ? 'http://pieguyrobot.com/api/auth/register'
-                : 'http://pieguyrobot.com/api/auth/login';
+                ? '/api/auth/register'
+                : '/api/auth/login';
 
             const res = await fetch(endpoint, {
                 method: 'POST',

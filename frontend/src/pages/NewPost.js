@@ -31,7 +31,7 @@ export default function NewPost() {
         }
 
         try {
-            const res = await fetch('http://pieguyrobot.com/api/posts', {
+            const res = await fetch('/api/posts', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

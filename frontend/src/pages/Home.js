@@ -6,7 +6,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://pieguyrobot.com/api/posts') // backend endpoint, adjust if needed
+    fetch('/api/posts') // backend endpoint, adjust if needed
       .then(res => res.json())
       .then(data => setPosts(data))
       .catch(console.error)
