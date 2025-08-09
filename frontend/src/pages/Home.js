@@ -41,7 +41,7 @@ export default function Home() {
       )}
 
       {localStorage.getItem('token') && localStorage.getItem('role') === 'owner' && (
-        <Link to="/new" className="inline-block mt-6 px-4 py-2 bg-red-700 rounded hover:bg-red-800">
+        <Link to="/new" className="inline-block mt-6 px-4 py-2 bg-red-700 border border-red px-4 py-2 rounded hover:bg-red hover:text-black transition">
           New Post (Owner Only)
         </Link>
       )}

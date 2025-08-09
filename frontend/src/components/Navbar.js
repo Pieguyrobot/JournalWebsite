@@ -20,7 +20,6 @@ export default function Navbar() {
     return (
         <>
             <nav className="bg-black text-red-400 p-4 flex items-center border-b border-white">
-                {/* Left: hamburger (mobile) + desktop links */}
                 <div className="flex items-center gap-4 w-full">
                     {/* Hamburger — MOBILE ONLY */}
                     <button
@@ -56,7 +55,6 @@ export default function Navbar() {
                                     Change Password
                                 </Link>
 
-                                {/* Signed in as — sits right after Change Password */}
                                 <div className={`flex items-center gap-2 pl-4 border-l border-white/30 ${role === "owner" ? "text-yellow-400" : "text-white"}`}>
                                     <span>Signed in as</span>
                                     {role === "owner" && <OwnerBadge />}
@@ -71,18 +69,21 @@ export default function Navbar() {
                         {isAuthed ? (
                             <button
                                 onClick={() => { logout(); setMobileOpen(false); navigate("/login"); }}
-                                className="hover:text-red-600 bg-transparent border border-white px-3 py-1 rounded cursor-pointer"
+                                className="inline-block bg-black text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors"
                             >
                                 Logout
                             </button>
                         ) : (
-                            <Link to="/login" className="hover:text-red-600 border border-white px-3 py-1 rounded">
+                            <Link
+                                to="/login"
+                                className="inline-block bg-black text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors"
+                            >
                                 Login
                             </Link>
                         )}
                     </div>
 
-                    {/* Mobile right side: show Signed in as OR Login */}
+                    {/* Mobile right side: Signed in as OR Login */}
                     <div className="md:hidden ml-auto flex items-center">
                         {isAuthed ? (
                             <div className={`flex items-center gap-2 ${role === "owner" ? "text-yellow-400" : "text-white"}`}>
@@ -91,7 +92,7 @@ export default function Navbar() {
                                 <span className="font-bold">{user?.displayName || user?.username}</span>
                             </div>
                         ) : (
-                            <Link to="/login" className="hover:text-red-600 border border-white px-3 py-1 rounded">
+                            <Link to="/login" className="inline-block bg-black text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors">
                                 Login
                             </Link>
                         )}
@@ -141,16 +142,18 @@ export default function Navbar() {
                                 </>
                             )}
 
-                            {!isAuthed && (
-                                <Link to="/login" className="hover:text-red-600" onClick={() => setMobileOpen(false)}>
+                            {!isAuthed ? (
+                                <Link
+                                    to="/login"
+                                    onClick={() => setMobileOpen(false)}
+                                    className="mt-4 inline-block bg-black text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors"
+                                >
                                     Login
                                 </Link>
-                            )}
-
-                            {isAuthed && (
+                            ) : (
                                 <button
                                     onClick={() => { logout(); setMobileOpen(false); navigate("/login"); }}
-                                    className="mt-4 bg-black text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+                                    className="mt-4 inline-block bg-black text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors"
                                 >
                                     Logout
                                 </button>
