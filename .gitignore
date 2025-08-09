@@ -7,6 +7,7 @@ frontend/node_modules/
 frontend/build/
 backend/dist/
 backend/build/
+oldStuff/
 
 # Logs
 *.log
