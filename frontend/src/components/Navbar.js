@@ -1,107 +1,174 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import OwnerBadge from '../components/OwnerBadge';
-
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import OwnerBadge from "../components/OwnerBadge";
+import { useAuth } from "../auth/AuthContext";
 
 export default function Navbar() {
     const navigate = useNavigate();
-    const [displayName, setDisplayName] = useState('');
-    const [role, setRole] = useState('');
-    const token = localStorage.getItem('token');
+    const { user, role, token, logout, updateDisplayName } = useAuth();
+    const [mobileOpen, setMobileOpen] = useState(false);
 
+    const isAuthed = !!token;
 
-    useEffect(() => {
-        
-        async function fetchUser() {
-            const token = localStorage.getItem('token');
-            if (!token) return;
-
-            try {
-                const res = await fetch('/api/auth/me', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                const data = await res.json();
-                if (res.ok) {
-                    setDisplayName(data.displayName || data.username);
-                    setRole(data.role || '');
-                    localStorage.setItem('role', data.role); // keep role synced
-                } else {
-                    localStorage.removeItem('token');
-                    navigate('/login');
-                }
-            } catch (err) {
-                console.error('Failed to fetch user info:', err);
-            }
-        }
-
-        fetchUser();
-    }, [token]);
-
-    function handleLogout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('role');
-        navigate('/login');
-    }
-
-    function handleChangeDisplayName() {
-        const newDisplayName = prompt('Enter your new display name:');
+    async function handleChangeDisplayName() {
+        const newDisplayName = prompt("Enter your new display name:");
         if (!newDisplayName) return;
-
-        fetch('/api/users/display-name', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ newDisplayName }),
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.displayName) setDisplayName(data.displayName);
-            })
-            .catch(err => console.error('Failed to update display name:', err));
+        const ok = await updateDisplayName(newDisplayName);
+        if (!ok?.ok) alert(ok.message || "Failed to update display name");
     }
 
     return (
-        <nav className="bg-black text-red-400 p-4 flex items-center justify-between border-b border-white">
-            <div className="flex gap-6 items-center">
-                <Link to="/" className="hover:text-red-600">Home</Link>
+        <>
+            <nav className="bg-black text-red-400 p-4 flex items-center border-b border-white">
+                {/* Left: hamburger (mobile) + desktop links */}
+                <div className="flex items-center gap-4 w-full">
+                    {/* Hamburger — MOBILE ONLY */}
+                    <button
+                        className="md:hidden w-10 h-10 grid place-items-center border border-red-500 rounded-none"
+                        onClick={() => setMobileOpen(true)}
+                        aria-label="Open menu"
+                        title="Menu"
+                    >
+                        <svg viewBox="0 0 24 24" className="w-6 h-6 text-red-500" aria-hidden="true">
+                            <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                    </button>
 
-                {token && role == 'admin' && (
-                    <Link to="/new" className="hover:text-red-600">New Post</Link>
-                )}
+                    {/* Desktop menu */}
+                    <div className="hidden md:flex items-center gap-6">
+                        <Link to="/" className="hover:text-red-600">Home</Link>
 
-                {token && (
-                    <>
+                        {isAuthed && (role === "owner" || role === "admin") && (
+                            <>
+                                {role === "owner" && (
+                                    <Link to="/new" className="hover:text-red-600">Make Post</Link>
+                                )}
+                                <Link to="/admin/users" className="hover:text-red-600">Manage Users</Link>
+                            </>
+                        )}
 
-                        <button
-                            onClick={handleChangeDisplayName}
-                            className="text-red-600 hover:text-red-600"
-                        >
-                            Change Display Name
-                        </button>
-                        <span className="text-white">
-                            Signed in as <span className="font-semibold text-red-6700">{displayName}</span>
-                        </span>
-                    </>
-                )}
+                        {isAuthed && (
+                            <>
+                                <button onClick={handleChangeDisplayName} className="text-left hover:text-red-600">
+                                    Change Display Name
+                                </button>
+                                <Link to="/account/password" className="hover:text-red-600">
+                                    Change Password
+                                </Link>
 
-                {!token && (
-                    <Link to="/login" className="hover:text-red-600">Login</Link>
-                )}
-            </div>
+                                {/* Signed in as — sits right after Change Password */}
+                                <div className={`flex items-center gap-2 pl-4 border-l border-white/30 ${role === "owner" ? "text-yellow-400" : "text-white"}`}>
+                                    <span>Signed in as</span>
+                                    {role === "owner" && <OwnerBadge />}
+                                    <span className="font-bold">{user?.displayName || user?.username}</span>
+                                </div>
+                            </>
+                        )}
+                    </div>
 
-            {token && (
-                <button
-                    onClick={handleLogout}
-                    className="hover:text-red-600 bg-transparent border-none cursor-pointer"
-                >
-                    Logout
-                </button>
+                    {/* Right edge: Login/Logout (desktop) */}
+                    <div className="ml-auto hidden md:flex items-center">
+                        {isAuthed ? (
+                            <button
+                                onClick={() => { logout(); setMobileOpen(false); navigate("/login"); }}
+                                className="hover:text-red-600 bg-transparent border border-white px-3 py-1 rounded cursor-pointer"
+                            >
+                                Logout
+                            </button>
+                        ) : (
+                            <Link to="/login" className="hover:text-red-600 border border-white px-3 py-1 rounded">
+                                Login
+                            </Link>
+                        )}
+                    </div>
+
+                    {/* Mobile right side: show Signed in as OR Login */}
+                    <div className="md:hidden ml-auto flex items-center">
+                        {isAuthed ? (
+                            <div className={`flex items-center gap-2 ${role === "owner" ? "text-yellow-400" : "text-white"}`}>
+                                <span>Signed in as</span>
+                                {role === "owner" && <OwnerBadge />}
+                                <span className="font-bold">{user?.displayName || user?.username}</span>
+                            </div>
+                        ) : (
+                            <Link to="/login" className="hover:text-red-600 border border-white px-3 py-1 rounded">
+                                Login
+                            </Link>
+                        )}
+                    </div>
+                </div>
+            </nav>
+
+            {/* Mobile drawer */}
+            {mobileOpen && (
+                <div className="fixed inset-0 z-50 md:hidden">
+                    <div className="absolute inset-0 bg-black/70" onClick={() => setMobileOpen(false)} />
+                    <div className="absolute top-0 left-0 h-full w-72 bg-black border-r border-white p-4 flex flex-col">
+                        <div className="flex items-center justify-between mb-4">
+                            <span className="text-white font-semibold">Menu</span>
+                            <button className="text-white text-xl" onClick={() => setMobileOpen(false)} aria-label="Close menu">
+                                ✕
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col gap-3">
+                            <Link to="/" className="hover:text-red-600" onClick={() => setMobileOpen(false)}>Home</Link>
+
+                            {isAuthed && (role === "owner" || role === "admin") && (
+                                <>
+                                    {role === "owner" && (
+                                        <Link to="/new" className="hover:text-red-600" onClick={() => setMobileOpen(false)}>
+                                            Make Post
+                                        </Link>
+                                    )}
+                                    <Link to="/admin/users" className="hover:text-red-600" onClick={() => setMobileOpen(false)}>
+                                        Manage Users
+                                    </Link>
+                                </>
+                            )}
+
+                            {isAuthed && (
+                                <>
+                                    <button
+                                        onClick={() => { setMobileOpen(false); handleChangeDisplayName(); }}
+                                        className="text-left hover:text-red-600"
+                                    >
+                                        Change Display Name
+                                    </button>
+                                    <Link to="/account/password" className="hover:text-red-600" onClick={() => setMobileOpen(false)}>
+                                        Change Password
+                                    </Link>
+                                </>
+                            )}
+
+                            {!isAuthed && (
+                                <Link to="/login" className="hover:text-red-600" onClick={() => setMobileOpen(false)}>
+                                    Login
+                                </Link>
+                            )}
+
+                            {isAuthed && (
+                                <button
+                                    onClick={() => { logout(); setMobileOpen(false); navigate("/login"); }}
+                                    className="mt-4 bg-black text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+                                >
+                                    Logout
+                                </button>
+                            )}
+                        </div>
+
+                        {isAuthed && (
+                            <div className={`mt-auto pt-4 border-t border-white/30 ${role === "owner" ? "text-yellow-400" : "text-white"}`}>
+                                <div className="flex items-center gap-2">
+                                    <span>Signed in as</span>
+                                    {role === "owner" && <OwnerBadge />}
+                                    <span className="font-bold">{user?.displayName || user?.username}</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
             )}
-        </nav>
+        </>
     );
 }

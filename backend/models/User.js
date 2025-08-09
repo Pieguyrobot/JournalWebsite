@@ -12,13 +12,18 @@ const UserSchema = new mongoose.Schema({
     },
     displayName: {
         type: String,
-        default: 'Unknown',
+        unique: true,
+        default: null,
     },
     role: {
         type: String,
-        enum: ['user', 'admin'],
+        enum: ['user', 'admin', 'owner'],
         default: 'user',
-    }
-});
+    },
+    passwordChangedAt: { 
+        type: Date, 
+        default: null 
+    },
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

@@ -13,7 +13,7 @@ export default function NewPost() {
         const token = localStorage.getItem('token');
         const role = localStorage.getItem('role');
 
-        if (!token || role !== 'admin') {
+        if (!token || role !== 'owner') {
             toast.error('Access denied');
             navigate('/');
         }
@@ -63,8 +63,8 @@ export default function NewPost() {
         setLoading(false);
     }
 
-    if (localStorage.getItem('role') !== 'admin') {
-        return null; // or a loading spinner / redirect fallback
+    if (localStorage.getItem('role') !== 'owner') {
+        return null;
     }
 
     return (

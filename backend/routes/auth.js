@@ -56,7 +56,7 @@ router.post('/register', async (req, res) => {
         const newUser = new User({
             username,
             passwordHash,
-            displayName: 'Unknown',
+            displayName: null,
             role: 'user',
         });
 
@@ -106,5 +106,47 @@ router.get('/me', authMiddleware, async (req, res) => {
 router.get('/verify', require('../middleware/authMiddleware'), (req, res) => {
     res.json({ message: 'Token valid', user: req.user });
 });
+
+
+// Change password //
+
+const zxcvbn = require('zxcvbn'); // npm i zxcvbn
+
+// PUT /api/auth/change-password (self-service)
+router.put('/change-password', authMiddleware, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'Missing fields' });
+    }
+
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const ok = await bcrypt.compare(currentPassword, user.passwordHash);
+        if (!ok) return res.status(400).json({ message: 'Current password is incorrect' });
+
+        if (newPassword === currentPassword) {
+            return res.status(400).json({ message: 'New password must be different from current password' });
+        }
+
+        // Strength check (score 0-4). Require 3+.
+        const strength = zxcvbn(newPassword);
+        if (strength.score < 3) {
+            return res.status(400).json({ message: 'Password too weak. Try a longer passphrase with mixed characters.' });
+        }
+
+        const saltRounds = 12; // 12 is fine; 12-14 is typical
+        user.passwordHash = await bcrypt.hash(newPassword, saltRounds);
+        user.passwordChangedAt = new Date();
+        await user.save();
+
+        return res.json({ message: 'Password changed successfully' });
+    } catch (err) {
+        console.error('Change password error:', err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+});
+
 
 module.exports = router;
